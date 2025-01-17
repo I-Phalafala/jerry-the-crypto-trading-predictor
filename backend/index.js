@@ -1,4 +1,5 @@
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const cors = require('cors');
 const { calculateIndicator, checkForSignals } = require('./indicators');
 const config = require('./config');
@@ -28,8 +29,8 @@ const runStrategies = async () => {
     year: 'numeric'
   });
 
-  const strategies = ['SMA', 'EMA', 'RSI'];
-  const results = strategies.map(strategy => {
+  
+  const results = config.enabledIndicators.map(strategy => {
     let signals;
 
     if (strategy === 'SMC') {
@@ -54,15 +55,6 @@ const runStrategies = async () => {
   return { signals: results, lastChecked};
 };
 
-app.get('/api/signals', async (req, res) => {
-  const { signals, lastChecked } = await runStrategies();
-  res.json({ signals, lastChecked});
-});
-
-// Endpoint to get the history of signals
-app.get('/api/history', async (req, res) => {
-    res.json(await signalHistory.getSignals());
-});
 
 // Endpoint to get prediction
 app.get('/api/prediction', async (req, res) => {
@@ -108,27 +100,44 @@ app.get('/api/trading-info', async (req, res) => {
   }
 });
 
-// Endpoint to get the current price
-app.get('/api/symbol-price', async (req, res) => {
-  try {
-    console.log('Fetching closing price data...');
-    const data = await fetchClosingPriceData();
-    console.log('Data fetched:', data);
-    
-    if (data.length === 0) {
-      console.log('No price data available');
-      return res.status(404).json({ error: 'No price data available' });
-    }
-    
-    const latestPrice = data[data.length - 1];
-    console.log('Latest price:', latestPrice);
-    res.json({ price: latestPrice });
-    
-  } catch (error) {
-    console.error('Error fetching symbol price:', error);
-    res.status(500).json({ error: 'Failed to fetch symbol price' });
-  }
+// Endpoint to get settings
+app.get('/api/settings', (req, res) => {
+  res.json(config);
 });
+
+// Endpoint to update settings
+app.post(
+  '/api/settings',
+  [
+      body('strategy').isString().isIn(['The Sir Kabzin (defualt)', 'Custom']),
+      body('enabledIndicators').isArray().custom((value) => {
+          return value.every(indicator => ['SMA', 'EMA', 'RSI', 'SMC'].includes(indicator));
+      }),
+      body('shortPeriod').isInt({ min: 1 }),
+      body('longPeriod').isInt({ min: 1 }),
+      body('rsiPeriod').isInt({ min: 1 }),
+      body('rsiOverbought').isInt({ min: 1, max: 100 }),
+      body('rsiOversold').isInt({ min: 1, max: 100 })
+  ],
+  (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+      }
+
+      const newConfig = req.body;
+      config.strategy = newConfig.strategy;
+      config.enabledIndicators = newConfig.enabledIndicators;
+      config.shortPeriod = newConfig.shortPeriod;
+      config.longPeriod = newConfig.longPeriod;
+      config.rsiPeriod = newConfig.rsiPeriod;
+      config.rsiOverbought = newConfig.rsiOverbought;
+      config.rsiOversold = newConfig.rsiOversold;
+
+      res.json(config);
+  }
+);
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

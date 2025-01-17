@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { PredictionHistoryComponent } from '../prediction-history/prediction-history.component';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SettingsComponent } from '../settings/settings.component';
 
 @Component({
   selector: 'app-predictions',
@@ -21,7 +22,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     CommonModule,
     PredictionHistoryComponent,
     FormsModule,
-    MatCheckboxModule 
+    MatCheckboxModule,
+    SettingsComponent 
   ],
   templateUrl: './predictions.component.html',
   styleUrl: './predictions.component.css'
@@ -33,6 +35,7 @@ export class PredictionsComponent implements OnInit, OnDestroy {
   private intervalId: any;
   private subscription: Subscription = new Subscription();
   showHistory = false;
+  showSettings = false;
 
   constructor(private predictionService: PredictionService) {}
 
@@ -64,5 +67,9 @@ export class PredictionsComponent implements OnInit, OnDestroy {
         this.predictionHistory = history;
       })
     );
+  }
+
+  toggleSettings(): void {
+    this.showSettings = !this.showSettings;
   }
 }

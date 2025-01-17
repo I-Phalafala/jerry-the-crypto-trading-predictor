@@ -1,0 +1,72 @@
+<form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <mat-label>Strategy</mat-label>
+    <mat-select formControlName="strategy">
+      <mat-option *ngFor="let strategy of strategies" [value]="strategy">
+        {{ strategy }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Enabled Indicators</mat-label>
+    <input matInput formControlName="enabledIndicators" readonly>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Short Period</mat-label>
+    <input matInput type="number" formControlName="shortPeriod" min="1" max="100">
+    <mat-error *ngIf="settingsForm.get('shortPeriod')?.hasError('required')">
+      Short Period is required
+    </mat-error>
+    <mat-error *ngIf="settingsForm.get('shortPeriod')?.hasError('min') || settingsForm.get('shortPeriod')?.hasError('max')">
+      Short Period must be between 1 and 100
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Long Period</mat-label>
+    <input matInput type="number" formControlName="longPeriod" min="1" max="100">
+    <mat-error *ngIf="settingsForm.get('longPeriod')?.hasError('required')">
+      Long Period is required
+    </mat-error>
+    <mat-error *ngIf="settingsForm.get('longPeriod')?.hasError('min') || settingsForm.get('longPeriod')?.hasError('max')">
+      Long Period must be between 1 and 100
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>RSI Period</mat-label>
+    <input matInput type="number" formControlName="rsiPeriod" min="1" max="100">
+    <mat-error *ngIf="settingsForm.get('rsiPeriod')?.hasError('required')">
+      RSI Period is required
+    </mat-error>
+    <mat-error *ngIf="settingsForm.get('rsiPeriod')?.hasError('min') || settingsForm.get('rsiPeriod')?.hasError('max')">
+      RSI Period must be between 1 and 100
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>RSI Overbought</mat-label>
+    <input matInput type="number" formControlName="rsiOverbought" min="1" max="100">
+    <mat-error *ngIf="settingsForm.get('rsiOverbought')?.hasError('required')">
+      RSI Overbought is required
+    </mat-error>
+    <mat-error *ngIf="settingsForm.get('rsiOverbought')?.hasError('min') || settingsForm.get('rsiOverbought')?.hasError('max')">
+      RSI Overbought must be between 1 and 100
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>RSI Oversold</mat-label>
+    <input matInput type="number" formControlName="rsiOversold" min="1" max="100">
+    <mat-error *ngIf="settingsForm.get('rsiOversold')?.hasError('required')">
+      RSI Oversold is required
+    </mat-error>
+    <mat-error *ngIf="settingsForm.get('rsiOversold')?.hasError('min') || settingsForm.get('rsiOversold')?.hasError('max')">
+      RSI Oversold must be between 1 and 100
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button type="submit" [disabled]="settingsForm.invalid">Save</button>
+</form>
