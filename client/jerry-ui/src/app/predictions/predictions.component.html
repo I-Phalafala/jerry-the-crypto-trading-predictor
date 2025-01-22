@@ -29,7 +29,7 @@
   <app-prediction-history *ngIf="showHistory"></app-prediction-history>
 
   <!-- Settings Component -->
-  <div *ngIf="showSettings" class="settings-card-container">
+  <div *ngIf="showSettings" (settingsSaved)="onSettingsSaved()" (close)="onSettingsSaved()"class="settings-card-container" >
     <app-settings></app-settings>
   </div>
 </div>

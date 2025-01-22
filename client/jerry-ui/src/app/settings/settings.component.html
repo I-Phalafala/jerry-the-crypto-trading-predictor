@@ -1,5 +1,6 @@
 <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
-  <mat-form-field>
+  <!--
+<mat-form-field>
     <mat-label>Strategy</mat-label>
     <mat-select formControlName="strategy">
       <mat-option *ngFor="let strategy of strategies" [value]="strategy">
@@ -7,6 +8,12 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+-->
+
+<mat-form-field>
+  <mat-label>Strategy</mat-label>
+  <input matInput formControlName="strategy" readonly>
+</mat-form-field>
 
   <mat-form-field>
     <mat-label>Enabled Indicators</mat-label>
@@ -69,4 +76,5 @@
   </mat-form-field>
 
   <button mat-raised-button type="submit" [disabled]="settingsForm.invalid">Save</button>
+  <button mat-raised-button type="button" (click)="onClose()">Close</button>
 </form>

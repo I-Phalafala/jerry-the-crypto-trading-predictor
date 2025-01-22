@@ -72,4 +72,8 @@ export class PredictionsComponent implements OnInit, OnDestroy {
   toggleSettings(): void {
     this.showSettings = !this.showSettings;
   }
+  
+  onSettingsSaved(): void {
+    this.showSettings = false; // Close the settings modal
+  }
 }
