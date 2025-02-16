@@ -17,6 +17,7 @@ export class PredictionHistoryComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   fullHistoryList: PredictionHistory[] = [];
   showAll: boolean = false;
+  tradingPair = 'BTCUSDT'; // Example trading pair
 
   constructor(private predictionService: PredictionService) {}
 
@@ -36,7 +37,7 @@ export class PredictionHistoryComponent implements OnInit, OnDestroy {
 
   fetchPredictionHistory(): void {
     this.subscription.add(
-        this.predictionService.getPredictionHistory().subscribe(history => {
+        this.predictionService.getPredictionHistory(this.tradingPair).subscribe(history => {
             this.fullHistoryList = history
                 .sort((a, b) => new Date(b.predictionTime).getTime() - new Date(a.predictionTime).getTime()); // Sort by predictionTime from most recent to oldest
             this.historyList = this.showAll ? this.fullHistoryList : this.fullHistoryList.slice(0, 5); // Respect the showAll state

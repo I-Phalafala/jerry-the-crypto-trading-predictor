@@ -4,11 +4,31 @@ const cors = require('cors');
 const { calculateIndicator, checkForSignals } = require('./indicators');
 const config = require('./config');
 const {fetchClosingPriceData, fetchTradingPairInfo } = require('./dataFetcher');
+
 const SignalHistory = require('./signalHistory');
-const signalHistory = new SignalHistory();
+const btcSignalHistory = new SignalHistory();
+const ethSignalHistory = new SignalHistory();
+const xrpSignalHistory = new SignalHistory();
+const solSignalHistory = new SignalHistory();
+const signalHistories = {
+  'BTCUSDT': btcSignalHistory,
+  'ETHUSDT': ethSignalHistory,
+  'XRPUSDT': xrpSignalHistory,
+  'SOLUSDT': solSignalHistory
+};
+
 const Prediction = require('./prediction');
 const PredictionHistory = require('./predictionHistory');
-const predictionHistory = new PredictionHistory();
+const btcPredictionHistory = new PredictionHistory();
+const ethPredictionHistory = new PredictionHistory();
+const xrpPredictionHistory = new PredictionHistory();
+const solPredictionHistory = new PredictionHistory();
+const predictionHistories = {
+  'BTCUSDT': btcPredictionHistory,
+  'ETHUSDT': ethPredictionHistory,
+  'XRPUSDT': xrpPredictionHistory,
+  'SOLUSDT': solPredictionHistory
+};
 
 
 const app = express();
@@ -17,9 +37,10 @@ const port = 3001;
 
 app.use(cors()); // Enable CORS
 
-const runStrategies = async () => {
-  const data = await fetchClosingPriceData();
-  if (data.length === 0) return { signals: [], lastChecked: null};
+// Run strategies
+const runStrategies = async (tradingPair) => {
+  const data = await fetchClosingPriceData(tradingPair);
+  if (data.length === 0) return { signals: [], lastChecked: null };
 
   const lastChecked = new Date().toLocaleString('en-GB', {
     second: '2-digit',
@@ -30,12 +51,11 @@ const runStrategies = async () => {
     year: 'numeric'
   });
 
-  
   const results = config.enabledIndicators.map(strategy => {
     let signals;
 
     if (strategy === 'SMC') {
-      //smc removed for now
+      // smc removed for now
     } else {
       const shortIndicator = calculateIndicator(data, config.shortPeriod, strategy);
       const longIndicator = strategy === 'RSI' ? [] : calculateIndicator(data, config.longPeriod, strategy);
@@ -45,50 +65,77 @@ const runStrategies = async () => {
     return {
       strategy,
       signal: signals.buy ? 'buy' : signals.sell ? 'sell' : 'none',
-        date: lastChecked
+      date: lastChecked,
+      tradingPair
     };
   });
 
-    console.log('Signals:', results);
-    signalHistory.addSignals(results);
+  console.log(`Signals for ${tradingPair}:`, results);
+  signalHistories[tradingPair].addSignals(results);
 
-
-  return { signals: results, lastChecked};
+  return { signals: results, lastChecked };
 };
 
+const runPredictions = async () => {
+  for (const tradingPair of config.tradingPairs) {
+    await runStrategies(tradingPair);
+
+    const data = await fetchClosingPriceData(tradingPair);
+
+    const prediction = new Prediction(signalHistories[tradingPair].signals, data);
+    const predictionResult = await prediction.getPrediction();
+    if (predictionResult) {
+
+      const lastPrediction = predictionHistories[tradingPair].predictions[predictionHistories[tradingPair].predictions.length - 1];
+
+      // Check if the new prediction is different from the last one
+      if (!lastPrediction || lastPrediction.prediction !== predictionResult.prediction) {
+        
+        if (predictionResult.prediction !== 'Hold')
+          {predictionHistories[tradingPair].closePredictions();}
+        
+        predictionHistories[tradingPair].addPredictions([predictionResult]);
+        console.log(`Prediction for ${tradingPair}:`, predictionResult);
+        
+      }
+    }
+
+    // Update open predictions with the latest price
+    const latestPrice = data[data.length - 1];
+    predictionHistories[tradingPair].updateOpenPredictions(latestPrice)
+  }
+};
+
+const runAllPredictions = async () => {
+  for (const tradingPair of config.tradingPairs) {
+    await runPredictions(tradingPair);
+  }
+};
+
+// Run predictions every 5 seconds  
+setInterval(runAllPredictions, 5000);
 
 // Endpoint to get prediction
 app.get('/api/prediction', async (req, res) => {
-  data = await fetchClosingPriceData();
-  runStrategies();
-  let prediction = new Prediction(signalHistory.signals, data);
-  predictionResult = await prediction.getPrediction();
-  if (predictionResult) {
-      // close predictions when hold is received
-      if (predictionResult.prediction == 'Hold') {
-          predictionHistory.closePredictions();
-      }
-
-      // Check if the new prediction is different from the last one
-      const lastPrediction = predictionHistory.predictions[predictionHistory.predictions.length - 1];
-      if (!lastPrediction || lastPrediction.prediction !== predictionResult.prediction) {
-          predictionHistory.addPredictions([predictionResult]);
-      }
+  const tradingPair = req.query.tradingPair;
+  if (!tradingPair) {
+    return res.status(400).json({ error: 'Trading pair is required' });
   }
-  res.json(predictionResult);
+
+  const prediction = predictionHistories[tradingPair].predictions[predictionHistories[tradingPair].predictions.length - 1];
+  res.json(prediction);
+
 });
 
 // Endpoint to get prediction history
 app.get('/api/prediction-history', async (req, res) => {
-  try {
-    const data = await fetchClosingPriceData();
-    const latestPrice = data[data.length - 1];
-    predictionHistory.updateOpenPredictions(latestPrice)
-    const predictions = await predictionHistory.getPredictions();
-    res.json(predictions);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch prediction history' });
+  const tradingPair = req.query.tradingPair;
+  if (!tradingPair) {
+    return res.status(400).json({ error: 'Trading pair is required' });
   }
+
+  const history = predictionHistories[tradingPair].getPredictions();
+  res.json(history);
 });
 
 // Endpoint to get the trading pair information

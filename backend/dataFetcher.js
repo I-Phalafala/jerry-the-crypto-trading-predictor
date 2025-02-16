@@ -1,11 +1,6 @@
-// dataFetcher.js
 const axios = require('axios');
-const primarySymbol = 'BTC'; // Example primary symbol
-const tradingPair = 'BTCUSDT'; // Example trading pair
-const binanceUrl = `https://api.binance.com/api/v3/ticker/24hr?symbol=${tradingPair}`;
-const coinMarketCapUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC&CMC_PRO_API_KEY=e44a6685-a785-4af6-8303-16106f7578db`;
 
-const fetchClosingPriceData = async () => {
+const fetchClosingPriceData = async (tradingPair) => {
   try {
     const response = await axios.get('https://api.binance.com/api/v3/klines', {
       params: {
@@ -21,8 +16,11 @@ const fetchClosingPriceData = async () => {
   }
 };
 
-const fetchTradingPairInfo = async () => {
+const fetchTradingPairInfo = async (tradingPair) => {
   try {
+    const binanceUrl = `https://api.binance.com/api/v3/ticker/24hr?symbol=${tradingPair}`;
+    const coinMarketCapUrl = ``;
+
     // Fetch data from Binance API
     const binanceResponse = await axios.get(binanceUrl);
     const binanceData = binanceResponse.data;
@@ -50,7 +48,5 @@ const fetchTradingPairInfo = async () => {
     return [];
   }
 };
-
-
 
 module.exports = {fetchClosingPriceData, fetchTradingPairInfo};

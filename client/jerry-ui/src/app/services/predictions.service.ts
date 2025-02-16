@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Prediction } from '../models/prediction';
 import { PredictionHistory } from '../models/prediction-history';
-
 
 @Injectable({ providedIn: 'root' })
 export class PredictionService {
@@ -12,11 +11,13 @@ export class PredictionService {
 
   constructor(private http: HttpClient) {}
 
-  getCurrentPrediction(): Observable<Prediction> {
-    return this.http.get<Prediction>(this.predictionUrl);
+  getCurrentPrediction(tradingPair: string): Observable<Prediction> {
+    const params = new HttpParams().set('tradingPair', tradingPair);
+    return this.http.get<Prediction>(this.predictionUrl, { params });
   }
 
-  getPredictionHistory(): Observable<PredictionHistory[]> {
-    return this.http.get<PredictionHistory[]>(this.predictionHistoryUrl);
+  getPredictionHistory(tradingPair: string): Observable<PredictionHistory[]> {
+    const params = new HttpParams().set('tradingPair', tradingPair);
+    return this.http.get<PredictionHistory[]>(this.predictionHistoryUrl, { params });
   }
 }
