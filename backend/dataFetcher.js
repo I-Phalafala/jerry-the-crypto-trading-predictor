@@ -19,7 +19,7 @@ const fetchClosingPriceData = async (tradingPair) => {
 const fetchTradingPairInfo = async (tradingPair) => {
   try {
     const binanceUrl = `https://api.binance.com/api/v3/ticker/24hr?symbol=${tradingPair}`;
-    const coinMarketCapUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC&CMC_PRO_API_KEY=e44a6685-a785-4af6-8303-16106f7578db`;
+    const coinMarketCapUrl = ``;
 
     // Fetch data from Binance API
     const binanceResponse = await axios.get(binanceUrl);
