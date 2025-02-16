@@ -36,6 +36,7 @@ export class PredictionsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   showHistory = false;
   showSettings = false;
+  tradingPair = 'BTCUSDT'; // Example trading pair
 
   constructor(private predictionService: PredictionService) {}
 
@@ -55,7 +56,7 @@ export class PredictionsComponent implements OnInit, OnDestroy {
 
   fetchLatestPrediction(): void {
     this.subscription.add(
-      this.predictionService.getCurrentPrediction().subscribe(prediction => {
+      this.predictionService.getCurrentPrediction(this.tradingPair).subscribe(prediction => {
         this.currentPrediction = prediction;
       })
     );
@@ -63,7 +64,7 @@ export class PredictionsComponent implements OnInit, OnDestroy {
 
   fetchPredictionHistory(): void {
     this.subscription.add(
-      this.predictionService.getPredictionHistory().subscribe(history => {
+      this.predictionService.getPredictionHistory(this.tradingPair).subscribe(history => {
         this.predictionHistory = history;
       })
     );
