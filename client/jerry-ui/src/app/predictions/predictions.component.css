@@ -113,6 +113,7 @@
   align-items: center;
 }
 
+
 .mat-checkbox {
   color: rgba(255, 255, 255, 0.8); /* Checkbox color */
 }
@@ -124,6 +125,32 @@
 .mat-checkbox-checked.mat-checkbox-background,
 .mat-checkbox-indeterminate.mat-checkbox-background {
   background-color: white; /* Checked color */
+}
+
+/** Logo styling */
+.logo-container {
+  margin-bottom: 20px; 
+  font-size: 26px; 
+  font-weight: bold;
+  text-align: center; 
+  font-family: 'Roboto', sans-serif; 
+  color: white;
+}
+
+/* Footer styling*/
+.footer {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center; 
+  font-family: 'Roboto', sans-serif; 
+  color: white;
+  margin-bottom: 20px; 
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* animations*/
