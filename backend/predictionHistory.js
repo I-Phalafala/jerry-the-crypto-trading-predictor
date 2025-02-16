@@ -16,7 +16,7 @@ class PredictionHistory {
     }
 
     // Get the history of predictions
-    getPredictions = async () => {
+    getPredictions() {
         return this.predictions;
     }
 
@@ -47,8 +47,6 @@ class PredictionHistory {
             }
         });
     }
-    
-
 }
 
 module.exports = PredictionHistory;

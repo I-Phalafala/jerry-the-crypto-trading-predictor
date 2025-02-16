@@ -1,5 +1,6 @@
 // config.js
 module.exports = {
+    tradingPairs: ['BTCUSDT', 'XRPUSDT', 'ETHUSDT', 'SOLUSDT'], // Trading pairs to watch
     strategy: 'The Sir Kabzin (defualt)', // Change to 'SMA', 'EMA', 'RSI', or 'SMC'
     enabledIndicators: ['SMA', 'EMA', 'RSI'], // Enabled indicators
     shortPeriod: 5,  // 5 minutes for moving averages
