@@ -36,7 +36,8 @@ export class PredictionsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   showHistory = false;
   showSettings = false;
-  tradingPair = 'BTCUSDT'; // Example trading pair
+  tradingPair = 'BTCUSDT'; // Default trading pair
+  currentYear: number = new Date().getFullYear(); 
 
   constructor(private predictionService: PredictionService) {}
 

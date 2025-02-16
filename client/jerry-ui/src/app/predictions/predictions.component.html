@@ -6,18 +6,25 @@
     sell: currentPrediction?.prediction === 'Sell'
   }"
 >
+  <!-- Logo -->
+  <div class="logo-container">
+    <h1>Jerry Says</h1>
+  </div>
+
   <div class="prediction-card">
     <div class="prediction-content">
       <h2>BTC/USD</h2>
       <p class="price">${{ currentPrediction?.currentPrice }}</p>
       <p class="action">{{ currentPrediction?.prediction }}</p>
-      <p class="last-update">Last update: {{ currentPrediction?.predictionTime }}</p>
+      <p class="last-update">
+        Last update: {{ currentPrediction?.predictionTime }}
+      </p>
     </div>
 
     <!-- Settings button -->
-    <button class="settings-button" (click)="toggleSettings()">
+    <!-- <button class="settings-button" (click)="toggleSettings()">
       <mat-icon>settings</mat-icon>
-    </button>
+    </button> -->
 
     <!-- Checkbox in the bottom-left corner -->
     <div class="history-checkbox-container">
@@ -29,7 +36,13 @@
   <app-prediction-history *ngIf="showHistory"></app-prediction-history>
 
   <!-- Settings Component -->
-  <div *ngIf="showSettings" (settingsSaved)="onSettingsSaved()" (close)="onSettingsSaved()"class="settings-card-container" >
+  <!-- <div *ngIf="showSettings" (settingsSaved)="onSettingsSaved()" (close)="onSettingsSaved()"class="settings-card-container" >
     <app-settings></app-settings>
-  </div>
+  </div> -->
 </div>
+<!-- Footer -->
+<footer class="footer">
+  <a href="https://cryptorichfriends.com" target="_blank"
+    >By Crypto Rich Friends. {{ currentYear }} All Rights Reserved</a
+  >
+</footer>
