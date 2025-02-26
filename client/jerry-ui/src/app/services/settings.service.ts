@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SettingsService {
-  private apiUrl = 'http://localhost:3001/api/settings';
+  private apiUrl = 'https://api.jerry.cryptorichfriends.com/api/settings';
 
   constructor(private http: HttpClient) { }
 

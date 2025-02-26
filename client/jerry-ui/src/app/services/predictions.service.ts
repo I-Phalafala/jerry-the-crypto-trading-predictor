@@ -7,7 +7,7 @@ import { PredictionHistory } from '../models/prediction-history';
 @Injectable({ providedIn: 'root' })
 export class PredictionService {
   private predictionUrl = 'https://api.jerry.cryptorichfriends.com/api/prediction';
-  private predictionHistoryUrl = 'https://api.jerry.cryptorichfriends.com/api/prediction-history';;
+  private predictionHistoryUrl = 'https://api.jerry.cryptorichfriends.com/api/prediction-history';
 
   constructor(private http: HttpClient) {}
 
