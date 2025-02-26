@@ -38,6 +38,7 @@ export class PredictionsComponent implements OnInit, OnDestroy {
   showSettings = false;
   tradingPair = 'BTCUSDT'; // Default trading pair
   currentYear: number = new Date().getFullYear(); 
+  predictionAccuracy: number = 0;
 
   constructor(private predictionService: PredictionService) {}
 
@@ -77,5 +78,8 @@ export class PredictionsComponent implements OnInit, OnDestroy {
   
   onSettingsSaved(): void {
     this.showSettings = false; // Close the settings modal
+  }
+  onAccuracyCalculated(accuracy: number): void {
+    this.predictionAccuracy = accuracy;
   }
 }

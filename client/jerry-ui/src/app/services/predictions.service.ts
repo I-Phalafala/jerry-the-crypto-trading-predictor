@@ -20,4 +20,5 @@ export class PredictionService {
     const params = new HttpParams().set('tradingPair', tradingPair);
     return this.http.get<PredictionHistory[]>(this.predictionHistoryUrl, { params });
   }
+
 }

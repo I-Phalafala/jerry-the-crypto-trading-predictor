@@ -17,14 +17,14 @@
       <p class="price">${{ currentPrediction?.currentPrice }}</p>
       <p class="action">{{ currentPrediction?.prediction }}</p>
       <p class="last-update">
-        Last update: {{ currentPrediction?.predictionTime }}
+        {{ currentPrediction?.predictionTime | date:'mediumTime' }}
       </p>
     </div>
 
-    <!-- Settings button -->
-    <!-- <button class="settings-button" (click)="toggleSettings()">
-      <mat-icon>settings</mat-icon>
-    </button> -->
+    <!-- Predition Accuracy -->
+    <div *ngIf="showHistory" class="settings-button">
+      <p>{{predictionAccuracy}}%</p>
+    </div>
 
     <!-- Checkbox in the bottom-left corner -->
     <div class="history-checkbox-container">
@@ -34,7 +34,7 @@
 
   <!-- History Component -->
    <div *ngIf="showHistory" class="history-card">
-    <app-prediction-history></app-prediction-history>
+    <app-prediction-history (accuracyCalculated)="onAccuracyCalculated($event)"></app-prediction-history>
   </div>
   
 
@@ -42,10 +42,14 @@
   <!-- <div *ngIf="showSettings" (settingsSaved)="onSettingsSaved()" (close)="onSettingsSaved()"class="settings-card-container" >
     <app-settings></app-settings>
   </div> -->
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <a href="https://cryptorichfriends.com" target="_blank"
+      >By Crypto Rich Friends. {{ currentYear }} All Rights Reserved</a
+    >
+  </footer>
+
 </div>
-<!-- Footer -->
-<footer class="footer">
-  <a href="https://cryptorichfriends.com" target="_blank"
-    >By Crypto Rich Friends. {{ currentYear }} All Rights Reserved</a
-  >
-</footer>
+
+
