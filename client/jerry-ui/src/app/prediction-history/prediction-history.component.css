@@ -73,3 +73,14 @@
 .history-content::-webkit-scrollbar-thumb:hover {
   background: #555; /* Customize the scrollbar thumb hover color */
 }
+
+/* Media query for mobile screens */
+@media (max-width: 600px) {
+  .history-container {
+    max-height: 300px;
+    max-width: 100%;    
+  }
+  .history-content{
+    font-size: 12px;
+  }
+}

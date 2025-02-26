@@ -33,7 +33,10 @@
   </div>
 
   <!-- History Component -->
-  <app-prediction-history *ngIf="showHistory"></app-prediction-history>
+   <div *ngIf="showHistory" class="history-card">
+    <app-prediction-history></app-prediction-history>
+  </div>
+  
 
   <!-- Settings Component -->
   <!-- <div *ngIf="showSettings" (settingsSaved)="onSettingsSaved()" (close)="onSettingsSaved()"class="settings-card-container" >
