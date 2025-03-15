@@ -4,11 +4,12 @@
   flex-direction: column; /* Stack items vertically */
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%; /* Allow the container to grow with its content */
   width: 100vw;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Disable horizontal scrolling */
   box-sizing: border-box;
   transition: background-color 0.5s ease, background-image 0.5s ease;
 }
@@ -24,6 +25,7 @@
 .fullscreen-container.sell {
   background: linear-gradient(135deg, #000000, #530202); /* Red gradient for Sell */
 }
+
 /* Frosted glass effect for the card */
 .prediction-card {
   display: flex;
@@ -89,6 +91,7 @@
   background-size: cover;
   background-repeat: no-repeat;
 }
+
 /* Settings card container */
 .settings-card-container {
   position: absolute;
@@ -103,7 +106,6 @@
   max-width: 600px;
 }
 
-
 /* Styling for the checkbox */
 .history-checkbox-container {
   position: absolute; /* Position inside the prediction card */
@@ -112,7 +114,6 @@
   display: flex;
   align-items: center;
 }
-
 
 .mat-checkbox {
   color: rgba(255, 255, 255, 0.8); /* Checkbox color */
@@ -129,7 +130,7 @@
 
 /** Logo styling */
 .logo-container {
-  margin-bottom: 20px; 
+  
   font-size: 26px; 
   font-weight: bold;
   text-align: center; 
@@ -137,7 +138,7 @@
   color: white;
 }
 
-/* Footer styling*/
+/* Footer styling */
 .footer {
   width: 100%;
   text-align: center; 
@@ -151,7 +152,22 @@
   text-decoration: none;
 }
 
-/* animations*/
+/* Custom scrollbar styling */
+.fullscreen-container::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.fullscreen-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1); /* Background of the scrollbar track */
+}
+
+.fullscreen-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3); /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+  border: 3px solid rgba(0, 0, 0, 0.1); /* Border around the scrollbar thumb */
+}
+
+/* animations */
 .fullscreen-container.buy {
   background: linear-gradient(135deg, #000000, #012e03);
   animation: gradientAnimation 3s infinite alternate;
@@ -178,13 +194,26 @@
 
 /* Media query for mobile screens */
 @media (max-width: 600px) {
+  .fullscreen-container {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
   .prediction-card {
     width: 70%;
     margin-bottom: 5px;
+    font-size: smaller;
+  }
+  .prediction-content h2 {
+    font-size: 20px;
+  }
+  .prediction-content .price {
+    font-size: 36px;
+  }
+  .logo-container {
+    font-size: 20px;
   }
   .footer {
     font-size: 12px;
-    padding: 10px;
+    padding: 25px;
   }
   .history-card {
     max-width: 80%;
